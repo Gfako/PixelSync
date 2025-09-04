@@ -99,6 +99,8 @@ export default function SchedulingPageEditor({ isOpen, onClose, templateId, onSa
       onSave(designSettings);
     }
     console.log('Saving design settings:', designSettings);
+    // Close the editor after saving
+    onClose();
   };
 
   const handlePreview = () => {
@@ -107,7 +109,7 @@ export default function SchedulingPageEditor({ isOpen, onClose, templateId, onSa
     console.log('Editor - Primary color being saved:', designSettings.primaryColor);
     sessionStorage.setItem('previewDesignSettings', JSON.stringify(designSettings));
     
-    // Open preview in new tab
+    // Open preview in new tab - back to original comprehensive version
     const previewUrl = `/book/${templateId || '1'}?preview=true`;
     window.open(previewUrl, '_blank');
   };

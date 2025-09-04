@@ -52,6 +52,7 @@ const defaultDesignSettings = {
   showAvatar: true,
   avatarUrl: '/api/placeholder/60/60',
   coverPhoto: '',
+  showCoverPhoto: false,
   customTextComponents: [],
   accordionComponents: []
 };
@@ -68,10 +69,22 @@ export default function BookingPage() {
   const [designSettings, setDesignSettings] = useState(defaultDesignSettings);
   const [expandedAccordions, setExpandedAccordions] = useState<string[]>([]);
   const [userTimezone, setUserTimezone] = useState<string>('America/New_York'); // User's preferred timezone for viewing
+  const [isClient, setIsClient] = useState(false);
+  // Form data for booking - moved to top level with other hooks
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  // Ensure component is hydrated
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Load design settings from sessionStorage for preview mode
   useEffect(() => {
-    if (isPreview && typeof window !== 'undefined') {
+    if (isClient && isPreview && typeof window !== 'undefined') {
       try {
         const storedSettings = sessionStorage.getItem('previewDesignSettings');
         console.log('Preview mode - stored settings:', storedSettings);
@@ -79,20 +92,32 @@ export default function BookingPage() {
           const parsed = JSON.parse(storedSettings);
           console.log('Preview mode - parsed settings:', parsed);
           console.log('Preview mode - primary color:', parsed.primaryColor);
-          setDesignSettings(parsed);
+          // Properly merge settings to avoid overwriting important defaults
+          setDesignSettings(prev => ({
+            ...prev,
+            ...parsed,
+            // Ensure these arrays exist even if not in stored settings
+            customTextComponents: parsed.customTextComponents || [],
+            accordionComponents: parsed.accordionComponents || []
+          }));
         }
       } catch (e) {
         console.error('Failed to parse design settings from sessionStorage:', e);
       }
     }
-  }, [isPreview]);
+  }, [isClient, isPreview]);
 
-  // Form data for booking
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
+  // Show loading while hydrating
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="text-gray-600 text-xl">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   const generateCalendarDays = () => {
     const year = currentDate.getFullYear();

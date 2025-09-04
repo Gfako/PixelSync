@@ -1,6 +1,6 @@
-import { Meeting } from '@/types';
+import { LegacyMeeting } from '@/types';
 
-export const mockMeetings: Meeting[] = [
+export const mockMeetings: LegacyMeeting[] = [
   // Past Meetings
   {
     id: '1',

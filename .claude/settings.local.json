@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(/C:\\Users\\oleee\\OneDrive\\Desktop\\Projects\\PixelSync/**)",
+      "Read(/C:\\Users\\oleee\\OneDrive\\Desktop\\Projects\\PixelSync\\src\\lib/**)",
+      "Read(/C:\\Users\\oleee\\OneDrive\\Desktop\\Projects\\PixelSync/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

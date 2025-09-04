@@ -7,121 +7,8 @@ import CalendarEventCard from '@/components/CalendarEventCard';
 import MeetingModal from '@/components/MeetingModal';
 import { Meeting } from '@/types';
 
-// Sample calendar data
-const sampleMeetings: Meeting[] = [
-  {
-    id: '1',
-    title: 'George <> Maria',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '2', name: 'Maria', email: 'maria@company.com', company: 'TechCorp', title: 'Designer' }
-    ],
-    date: '2025-08-08', // Friday, 8th
-    time: '10:00 AM',
-    type: 'Partnerships',
-    tags: ['Partnerships'],
-    status: 'upcoming',
-    notes: 'Discussion about partnership opportunities.',
-    transcript: 'Partnership meeting transcript...'
-  },
-  {
-    id: '2',
-    title: 'Business Meeting',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '3', name: 'John', email: 'john@business.com', company: 'BusinessCorp', title: 'CEO' }
-    ],
-    date: '2025-08-10', // Sunday, 10th
-    time: '2:00 PM',
-    type: 'Networking',
-    tags: ['Networking'],
-    status: 'upcoming',
-    notes: 'Business networking session.'
-  },
-  {
-    id: '3',
-    title: 'Partnership Discuss',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '4', name: 'Sarah', email: 'sarah@partner.com', company: 'PartnerCorp', title: 'Director' }
-    ],
-    date: '2025-08-12', // Tuesday, 12th
-    time: '11:00 AM',
-    type: 'Partnership',
-    tags: ['Partnership'],
-    status: 'upcoming',
-    notes: 'Partnership discussion and planning.'
-  },
-  {
-    id: '4',
-    title: 'Next Intro',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '5', name: 'Alex', email: 'alex@next.com', company: 'NextGen', title: 'CTO' }
-    ],
-    date: '2025-08-18', // Monday, 18th
-    time: '3:00 PM',
-    type: 'Development',
-    tags: ['Development'],
-    status: 'upcoming',
-    notes: 'Introduction and technical discussion.'
-  },
-  {
-    id: '5',
-    title: 'Sales Call',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '6', name: 'Emma', email: 'emma@sales.com', company: 'SalesCorp', title: 'Sales Manager' }
-    ],
-    date: '2025-08-21', // Thursday, 21st
-    time: '1:00 PM',
-    type: 'Sales',
-    tags: ['Sales'],
-    status: 'upcoming',
-    notes: 'Sales presentation and demo.'
-  },
-  {
-    id: '6',
-    title: 'Call with Mat',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '7', name: 'Mat', email: 'mat@design.com', company: 'DesignStudio', title: 'Designer' }
-    ],
-    date: '2025-08-25', // Monday, 25th
-    time: '4:00 PM',
-    type: 'Design',
-    tags: ['Design'],
-    status: 'upcoming',
-    notes: 'Design review and feedback session.'
-  },
-  {
-    id: '7',
-    title: 'Holiday Party',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' }
-    ],
-    date: '2025-08-26', // Tuesday, 26th
-    time: '6:00 PM',
-    type: 'Holiday',
-    tags: ['Holiday'],
-    status: 'upcoming',
-    notes: 'Company holiday celebration.'
-  },
-  {
-    id: '8',
-    title: 'Call John > Trip',
-    participants: [
-      { id: '1', name: 'George', email: 'george@pixelsync.io', company: 'PixelSync', title: 'Product Manager' },
-      { id: '8', name: 'John', email: 'john@travel.com', company: 'TravelCorp', title: 'Manager' }
-    ],
-    date: '2025-08-27', // Wednesday, 27th
-    time: '9:00 AM',
-    type: 'Personal',
-    tags: ['Personal'],
-    status: 'upcoming',
-    notes: 'Discussion about upcoming business trip.'
-  }
-];
+// Calendar data - will be fetched from API in the future
+const calendarMeetings: Meeting[] = [];
 
 const filterOptions = [
   { id: 'all', label: 'View All', color: 'bg-pixel-muted', active: true },
@@ -141,7 +28,7 @@ const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 7, 1)); // August 2025
-  const [meetings, setMeetings] = useState<Meeting[]>(sampleMeetings);
+  const [meetings, setMeetings] = useState<Meeting[]>(calendarMeetings);
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [activeFilter, setActiveFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'Month' | 'Week' | 'Day' | 'List'>('Month');

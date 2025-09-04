@@ -1,33 +1,44 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuthSimple } from '@/hooks/useAuthSimple';
+import { useRouter } from 'next/navigation';
 import { Plus } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
-import MeetingCard from '@/components/MeetingCard';
-import MeetingModal from '@/components/MeetingModal';
 import { Meeting } from '@/types';
-import { getMeetings } from '@/lib/database';
 
 export default function Home() {
+  const { isAuthenticated, loading: isLoading } = useAuthSimple();
+  const router = useRouter();
   const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
+  // Redirect to auth if not authenticated
   useEffect(() => {
-    async function loadMeetings() {
-      try {
-        const fetchedMeetings = await getMeetings();
-        setMeetings(fetchedMeetings);
-      } catch (error) {
-        console.error('Error loading meetings:', error);
-      } finally {
-        setLoading(false);
-      }
+    if (!isLoading && !isAuthenticated) {
+      router.push('/auth');
     }
+  }, [isAuthenticated, isLoading, router]);
 
-    loadMeetings();
-  }, []);
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
+  // Don't render app if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  // Mock meetings data for now
   const pastMeetings = meetings.filter(m => m.status === 'past');
   const upcomingMeetings = meetings.filter(m => m.status === 'upcoming');
 
@@ -56,11 +67,14 @@ export default function Home() {
               <div className="space-y-4">
                 {pastMeetings.length > 0 ? (
                   pastMeetings.map((meeting) => (
-                    <MeetingCard
+                    <div
                       key={meeting.id}
-                      meeting={meeting}
+                      className="bg-pixel-card p-4 rounded-lg border border-pixel-border cursor-pointer hover:bg-pixel-card-hover transition-colors"
                       onClick={() => setSelectedMeeting(meeting)}
-                    />
+                    >
+                      <h3 className="font-semibold text-pixel-text">{meeting.title}</h3>
+                      <p className="text-pixel-text-light text-sm">{meeting.description}</p>
+                    </div>
                   ))
                 ) : (
                   <div className="text-pixel-text-light text-center py-8">
@@ -83,11 +97,14 @@ export default function Home() {
               <div className="space-y-4">
                 {upcomingMeetings.length > 0 ? (
                   upcomingMeetings.map((meeting) => (
-                    <MeetingCard
+                    <div
                       key={meeting.id}
-                      meeting={meeting}
+                      className="bg-pixel-card p-4 rounded-lg border border-pixel-border cursor-pointer hover:bg-pixel-card-hover transition-colors"
                       onClick={() => setSelectedMeeting(meeting)}
-                    />
+                    >
+                      <h3 className="font-semibold text-pixel-text">{meeting.title}</h3>
+                      <p className="text-pixel-text-light text-sm">{meeting.description}</p>
+                    </div>
                   ))
                 ) : (
                   <div className="text-pixel-text-light text-center py-8">
@@ -105,12 +122,6 @@ export default function Home() {
           New Meeting
         </button>
       </div>
-
-      {/* Meeting Modal */}
-      <MeetingModal
-        meeting={selectedMeeting}
-        onClose={() => setSelectedMeeting(null)}
-      />
     </div>
   );
 }
