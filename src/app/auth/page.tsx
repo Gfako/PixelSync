@@ -75,119 +75,123 @@ export default function AuthPage() {
   // Show loading spinner while checking auth state
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
+      <div className="min-h-screen flex items-center justify-center" style={{background: 'var(--background)'}}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <div className="text-white text-xl">Loading...</div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-foreground mx-auto mb-4" style={{borderColor: 'var(--foreground)'}}></div>
+          <div className="text-xl brutalist-text">LOADING...</div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 p-4">
+    <div className="min-h-screen flex items-center justify-center p-4" style={{background: 'var(--background)'}}>
       <div className="max-w-md w-full space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto mb-4 w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-600 rounded-2xl flex items-center justify-center">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          <div className="mx-auto mb-4 w-16 h-16 brutalist-card flex items-center justify-center" style={{background: 'var(--primary)', color: 'var(--primary-foreground)'}}>
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 className="text-4xl font-bold text-white mb-2">Welcome to PixelSync</h1>
-          <p className="text-gray-300 text-lg">Smart meeting scheduler with AI-powered insights</p>
+          <h1 className="text-4xl font-bold brutalist-text mb-2">WELCOME TO PIXELSYNC</h1>
+          <p className="brutalist-text text-lg opacity-80">BRUTAL MEETING SCHEDULER</p>
         </div>
         
         {/* Auth Card */}
-        <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-gray-700 p-8 shadow-2xl">
+        <div className="brutalist-card p-8">
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">
-                {isSignUp ? 'Create Account' : 'Sign In'}
+              <h2 className="text-2xl font-bold brutalist-text mb-2">
+                {isSignUp ? 'CREATE ACCOUNT' : 'SIGN IN'}
               </h2>
-              <p className="text-gray-400">
-                {isSignUp ? 'Join PixelSync to start scheduling' : 'Welcome back! Please sign in to continue'}
+              <p className="brutalist-text opacity-80">
+                {isSignUp ? 'JOIN PIXELSYNC TO START SCHEDULING' : 'WELCOME BACK! PLEASE SIGN IN TO CONTINUE'}
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignUp && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Full Name
+                  <label className="block text-sm font-medium brutalist-text mb-2">
+                    FULL NAME
                   </label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your full name"
+                    autoComplete="name"
+                    className="w-full brutalist-input"
+                    placeholder="ENTER YOUR FULL NAME"
                   />
                 </div>
               )}
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email Address
+                <label className="block text-sm font-medium brutalist-text mb-2">
+                  EMAIL ADDRESS
                 </label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your email"
+                  autoComplete="email"
+                  className="w-full brutalist-input"
+                  placeholder="ENTER YOUR EMAIL"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Password
+                <label className="block text-sm font-medium brutalist-text mb-2">
+                  PASSWORD
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter your password"
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
+                  className="w-full brutalist-input"
+                  placeholder="ENTER YOUR PASSWORD"
                 />
               </div>
 
               {isSignUp && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Confirm Password
+                  <label className="block text-sm font-medium brutalist-text mb-2">
+                    CONFIRM PASSWORD
                   </label>
                   <input
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Confirm your password"
+                    autoComplete="new-password"
+                    className="w-full brutalist-input"
+                    placeholder="CONFIRM YOUR PASSWORD"
                   />
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
-                  <p className="text-red-300 text-sm">{error}</p>
+                <div className="brutalist-card p-3" style={{background: 'var(--destructive)', borderColor: 'var(--border)'}}>
+                  <p className="text-sm font-bold" style={{color: 'var(--background)'}}>{error.toUpperCase()}</p>
                 </div>
               )}
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex items-center justify-center px-6 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                className="w-full brutalist-button flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                    {isSignUp ? 'Creating Account...' : 'Signing In...'}
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-4 mr-3" style={{borderColor: 'var(--primary-foreground)'}}></div>
+                    {isSignUp ? 'CREATING ACCOUNT...' : 'SIGNING IN...'}
                   </div>
                 ) : (
-                  <>{isSignUp ? 'Create Account' : 'Sign In'}</>
+                  <>{isSignUp ? 'CREATE ACCOUNT' : 'SIGN IN'}</>
                 )}
               </button>
 
@@ -201,32 +205,32 @@ export default function AuthPage() {
                     setConfirmPassword('')
                     setFullName('')
                   }}
-                  className="text-blue-400 hover:text-blue-300 text-sm underline"
+                  className="brutalist-text text-sm font-bold underline opacity-80 hover:opacity-100"
                 >
-                  {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
+                  {isSignUp ? 'ALREADY HAVE AN ACCOUNT? SIGN IN' : 'NEED AN ACCOUNT? SIGN UP'}
                 </button>
               </div>
             </form>
 
             {/* Features Preview */}
-            <div className="border-t border-gray-700 pt-6">
-              <p className="text-center text-sm text-gray-400 mb-4">What you'll get with PixelSync:</p>
+            <div className="pt-6" style={{borderTop: '4px solid var(--border)'}}>
+              <p className="text-center text-sm brutalist-text mb-4 font-bold">WHAT YOU'LL GET WITH PIXELSYNC:</p>
               <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
+                <div className="text-center brutalist-card p-3">
                   <div className="text-2xl mb-1">🗓️</div>
-                  <p className="text-xs text-gray-400">Calendar Sync</p>
+                  <p className="text-xs brutalist-text font-bold">CALENDAR SYNC</p>
                 </div>
-                <div className="text-center">
+                <div className="text-center brutalist-card p-3">
                   <div className="text-2xl mb-1">🤖</div>
-                  <p className="text-xs text-gray-400">AI Summaries</p>
+                  <p className="text-xs brutalist-text font-bold">AI SUMMARIES</p>
                 </div>
-                <div className="text-center">
+                <div className="text-center brutalist-card p-3">
                   <div className="text-2xl mb-1">📹</div>
-                  <p className="text-xs text-gray-400">Auto Recording</p>
+                  <p className="text-xs brutalist-text font-bold">AUTO RECORDING</p>
                 </div>
-                <div className="text-center">
+                <div className="text-center brutalist-card p-3">
                   <div className="text-2xl mb-1">🔒</div>
-                  <p className="text-xs text-gray-400">Secure & Private</p>
+                  <p className="text-xs brutalist-text font-bold">SECURE & PRIVATE</p>
                 </div>
               </div>
             </div>
@@ -235,11 +239,11 @@ export default function AuthPage() {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-gray-400 text-sm flex items-center justify-center">
+          <p className="brutalist-text text-sm flex items-center justify-center opacity-80">
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 0h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 15v2m-6 0h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            Secure authentication powered by Supabase
+            SECURE AUTHENTICATION POWERED BY SUPABASE
           </p>
         </div>
       </div>

@@ -46,27 +46,23 @@ export default function Sidebar() {
   };
   
   return (
-    <div className="w-64 bg-pixel-sidebar border-r-2 border-pixel-border h-screen flex flex-col shadow-retro-lg">
+    <div className="w-72 brutalist-sidebar h-screen flex flex-col">
       {/* Logo */}
-      <div className="p-4 border-b-2 border-pixel-border">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 border-2 border-pixel-border shadow-retro overflow-hidden bg-white">
-            <img 
-              src="/assets/logo.png" 
-              alt="PixelSync Logo" 
-              className="w-full h-full object-contain"
-            />
+      <div className="p-6 border-b-4" style={{borderColor: 'var(--border)'}}>
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 flex items-center justify-center" style={{background: 'var(--primary)'}}>
+            <Calendar className="w-6 h-6" style={{color: 'var(--primary-foreground)'}} />
           </div>
-          <span className="font-bold text-pixel-primary">Pixel Sync</span>
+          <div>
+            <h1 className="text-xl font-bold" style={{color: 'var(--foreground)'}}>PIXELSYNC</h1>
+            <p className="text-sm" style={{color: 'var(--foreground)', opacity: 0.7}}>BRUTAL SCHEDULING</p>
+          </div>
         </div>
       </div>
 
       {/* Main Menu */}
       <div className="flex-1 p-4">
-        <div className="text-xs uppercase tracking-wider text-pixel-muted mb-4 font-bold">
-          Main Menu
-        </div>
-        <nav className="space-y-1">
+        <nav className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -74,14 +70,10 @@ export default function Sidebar() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`w-full flex items-center gap-3 px-3 py-2 text-left pixel-sidebar-item border-2 transition-all duration-200 ${
-                  isActive
-                    ? 'bg-pixel-primary text-white border-pixel-primary shadow-retro'
-                    : 'hover:bg-pixel-surface text-pixel-text border-transparent hover:border-pixel-border'
-                }`}
+                className={`brutalist-nav-item ${isActive ? 'active' : ''}`}
               >
-                <Icon className="w-4 h-4" />
-                <span className="text-sm font-medium">{item.label}</span>
+                <Icon className="w-5 h-5 mr-3" />
+                {item.label.toUpperCase()}
               </Link>
             );
           })}
@@ -90,12 +82,12 @@ export default function Sidebar() {
       </div>
 
       {/* User Profile */}
-      <div className="p-4 border-t-2 border-pixel-border relative">
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t-4" style={{borderColor: 'var(--border)'}}>
         <div className="flex items-center gap-3">
           {/* User Avatar */}
           <button
             onClick={() => setShowUserMenu(!showUserMenu)}
-            className="w-8 h-8 bg-pixel-secondary border-2 border-pixel-secondary flex items-center justify-center shadow-retro hover:bg-pixel-primary transition-colors"
+            className="w-12 h-12 border-2 flex items-center justify-center" style={{background: 'var(--accent)', borderColor: 'var(--border)'}}
           >
             {user?.avatar_url || user?.image ? (
               <img
@@ -118,23 +110,17 @@ export default function Sidebar() {
           
           {/* User Info */}
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-medium truncate text-pixel-text">
-              {getUserDisplayName(user)}
+            <div className="text-sm font-black" style={{color: 'var(--foreground)'}}>
+              {getUserDisplayName(user).toUpperCase()}
             </div>
             {user?.email && (
-              <div className="text-xs text-pixel-text-light truncate">
-                {user.email}
+              <div className="text-xs" style={{color: 'var(--foreground)', opacity: 0.7}}>
+                ADMIN USER
               </div>
             )}
           </div>
           
           {/* Settings Button */}
-          <Link
-            href="/settings"
-            className="text-pixel-text-light hover:text-pixel-text transition-colors p-1 hover:bg-pixel-surface border-2 border-transparent hover:border-pixel-border"
-          >
-            <Settings className="w-4 h-4" />
-          </Link>
         </div>
 
         {/* User Dropdown Menu */}

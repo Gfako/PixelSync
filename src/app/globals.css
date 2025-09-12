@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
@@ -12,6 +13,27 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* Custom Color Palette */
+    --platinum: #cfdbd5;
+    --saffron: #f5cb5c;
+    --eerie-black: #242423;
+    --jet: #333533;
+    
+    /* Neo-Brutalism Theme with Custom Palette */
+    --background: #cfdbd5;
+    --foreground: #242423;
+    --card: #cfdbd5;
+    --primary: #f5cb5c;
+    --primary-foreground: #242423;
+    --secondary: rgba(207, 219, 213, 0.8);
+    --accent: #333533;
+    --border: #242423;
+    --muted: rgba(207, 219, 213, 0.6);
+    --shadow-lg: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 4px 6px -1px hsl(0 0% 0% / 1.00);
+    --shadow-sm: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 1px 2px -1px hsl(0 0% 0% / 1.00);
+  }
+
   * {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
@@ -19,33 +41,200 @@
   }
   
   body {
-    @apply bg-pixel-bg text-pixel-text font-pixel;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    background: var(--background);
+    color: var(--foreground);
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    color: var(--foreground) !important;
   }
 }
 
 @layer components {
+  /* Neo-Brutalism Components with Custom Palette */
+  
+  .brutalist-card {
+    background: var(--card) !important;
+    border: 4px solid var(--border) !important;
+    border-radius: 0px !important;
+    box-shadow: var(--shadow-lg) !important;
+    transition: all 0.2s ease !important;
+    padding: 1rem !important;
+  }
+
+  .brutalist-card:hover {
+    transform: translate(-3px, -3px) !important;
+    box-shadow: 7px 7px 0px 0px hsl(0 0% 0% / 1.00) !important;
+  }
+
+  .brutalist-button {
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+    border: 4px solid var(--border) !important;
+    padding: 1rem 2rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: var(--shadow-lg) !important;
+    transition: all 0.1s ease !important;
+    cursor: pointer !important;
+    border-radius: 0px !important;
+  }
+
+  .brutalist-button:hover {
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 6px 6px 0px 0px hsl(0 0% 0% / 1.00) !important;
+  }
+
+  .brutalist-button:active {
+    transform: translate(2px, 2px) !important;
+    box-shadow: 2px 2px 0px 0px hsl(0 0% 0% / 1.00) !important;
+  }
+
+  .brutalist-button-secondary {
+    background: var(--card) !important;
+    color: var(--foreground) !important;
+    border: 4px solid var(--border) !important;
+    padding: 1rem 2rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: var(--shadow-lg) !important;
+    transition: all 0.1s ease !important;
+    cursor: pointer !important;
+    border-radius: 0px !important;
+  }
+
+  .brutalist-button-secondary:hover {
+    background: var(--secondary) !important;
+    transform: translate(-2px, -2px) !important;
+    box-shadow: 6px 6px 0px 0px hsl(0 0% 0% / 1.00) !important;
+  }
+
+  .brutalist-nav-item {
+    background: transparent !important;
+    border: 3px solid transparent !important;
+    padding: 1rem !important;
+    margin: 0.5rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    transition: all 0.1s ease !important;
+    text-decoration: none !important;
+    color: var(--foreground) !important;
+    display: flex !important;
+    align-items: center !important;
+    border-radius: 0px !important;
+  }
+
+  .brutalist-nav-item:hover {
+    background: var(--accent) !important;
+    border-color: var(--border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transform: translate(-2px, -2px) !important;
+    color: var(--background) !important;
+  }
+
+  .brutalist-nav-item.active {
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+    border-color: var(--border) !important;
+    box-shadow: 4px 4px 0px 0px hsl(0 0% 0% / 1.00), 4px 2px 4px -1px hsl(0 0% 0% / 1.00) !important;
+  }
+
+  .brutalist-status {
+    border: 3px solid var(--border) !important;
+    padding: 0.5rem 1rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    box-shadow: 2px 2px 0px 0px hsl(0 0% 0% / 0.50) !important;
+    border-radius: 0px !important;
+  }
+
+  .brutalist-status.success {
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+  }
+
+  .brutalist-input {
+    background: var(--card) !important;
+    border: 4px solid var(--border) !important;
+    padding: 0.75rem !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--foreground) !important;
+    box-shadow: var(--shadow-sm) !important;
+    transition: all 0.2s ease !important;
+    border-radius: 0px !important;
+  }
+
+  .brutalist-input:focus {
+    outline: none !important;
+    background: var(--background) !important;
+    box-shadow: var(--shadow-lg) !important;
+    transform: translate(-1px, -1px) !important;
+  }
+
+  .brutalist-sidebar {
+    background: var(--card) !important;
+    border-right: 4px solid var(--border) !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+
+  .brutalist-header {
+    background: var(--card) !important;
+    border-bottom: 4px solid var(--border) !important;
+    box-shadow: var(--shadow-sm) !important;
+  }
+
+  .brutalist-text {
+    color: var(--foreground) !important;
+  }
+
+  /* Legacy component support */
   .pixel-border {
     @apply border-2 border-pixel-border;
   }
   
   .pixel-button {
-    @apply px-4 py-2 bg-pixel-primary text-white hover:bg-pixel-primary/90 transition-all duration-200 cursor-pointer font-medium text-sm border-2 border-pixel-primary shadow-retro hover:shadow-retro-md hover:translate-y-[-1px];
+    @apply brutalist-button;
   }
   
   .pixel-button-secondary {
-    @apply px-4 py-2 bg-pixel-surface text-pixel-text hover:bg-pixel-border border-2 border-pixel-border transition-all duration-200 cursor-pointer font-medium text-sm shadow-retro hover:shadow-retro-md hover:translate-y-[-1px];
+    @apply brutalist-button-secondary;
   }
   
   .pixel-card {
-    @apply bg-pixel-surface p-4 border-2 border-pixel-border shadow-retro hover:shadow-retro-lg transition-all duration-200 hover:translate-y-[-2px] animate-fade-in;
+    @apply brutalist-card;
   }
   
   .pixel-input {
-    @apply border-2 border-pixel-border bg-pixel-surface px-3 py-2 text-pixel-text placeholder:text-pixel-muted focus:outline-none focus:border-pixel-primary focus:shadow-retro transition-all duration-200;
+    @apply brutalist-input;
   }
 
   .pixel-sidebar-item {
-    @apply transition-all duration-200 hover:shadow-retro-sm hover:translate-x-[2px];
+    @apply brutalist-nav-item;
   }
 
   .pixel-modal-backdrop {

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { TemplateCustomizationService } from '@/lib/template-customizations';
 import { X, ChevronLeft, ChevronRight, Clock, Calendar, Type, Palette, Image as ImageIcon, Edit, Plus, Trash2, ChevronDown, ChevronUp, Upload } from 'lucide-react';
 
 interface CustomTextComponent {
@@ -61,6 +62,8 @@ export default function SchedulingPageEditor({ isOpen, onClose, templateId, onSa
   const [selectedDate, setSelectedDate] = useState(24); // 24th selected
   const [selectedTimes, setSelectedTimes] = useState<string[]>(['14:00']);
   const [activeTab, setActiveTab] = useState('design');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Design customization state with improved color controls
   const [designSettings, setDesignSettings] = useState({
@@ -92,15 +95,102 @@ export default function SchedulingPageEditor({ isOpen, onClose, templateId, onSa
   const [editingComponent, setEditingComponent] = useState<string | null>(null);
   const [expandedAccordions, setExpandedAccordions] = useState<string[]>([]);
 
+  // Load template customizations when editor opens
+  useEffect(() => {
+    if (isOpen && templateId) {
+      loadTemplateCustomizations();
+    }
+  }, [isOpen, templateId]);
+
+  const loadTemplateCustomizations = async () => {
+    if (!templateId) return;
+    
+    setIsLoading(true);
+    try {
+      // For new templates, always use defaults
+      if (templateId === "new-template") {
+        const defaultSettings = TemplateCustomizationService.getDefaultSettings();
+        setDesignSettings(defaultSettings);
+      } else {
+        // For existing templates, try to load from Supabase
+        const customization = await TemplateCustomizationService.loadCustomizations(templateId);
+        
+        if (customization) {
+          // Convert API format to editor format
+          const editorSettings = TemplateCustomizationService.convertApiToEditor(customization);
+          setDesignSettings(editorSettings);
+        } else {
+          // Use default settings
+          const defaultSettings = TemplateCustomizationService.getDefaultSettings();
+          setDesignSettings(defaultSettings);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load template customizations:', error);
+      // Use default settings on error
+      const defaultSettings = TemplateCustomizationService.getDefaultSettings();
+      setDesignSettings(defaultSettings);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
-  const handleSave = () => {
-    if (onSave) {
-      onSave(designSettings);
+  // Show loading state while loading customizations
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="bg-white p-8 rounded-lg border-2 border-pixel-border">
+          <div className="flex items-center gap-3">
+            <div className="w-6 h-6 border-2 border-pixel-primary border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-pixel-text">Loading template customizations...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleSave = async () => {
+    if (!templateId) {
+      console.error('No template ID provided');
+      return;
     }
-    console.log('Saving design settings:', designSettings);
-    // Close the editor after saving
-    onClose();
+
+    setIsSaving(true);
+    try {
+      // For new templates, we save the template data first through the onSave callback
+      // Then we can save customizations once we have a real template ID
+      if (onSave) {
+        onSave(designSettings);
+      }
+
+      // Only save customizations to Supabase if it's not a new template
+      // For new templates, the parent component will handle creating the template first
+      if (templateId !== "new-template") {
+        // Convert editor format to API format
+        const customizationData = TemplateCustomizationService.convertEditorToApi(designSettings);
+        
+        // Save to Supabase
+        const savedCustomization = await TemplateCustomizationService.saveCustomizations(
+          templateId, 
+          customizationData
+        );
+
+        console.log('Template customizations saved successfully:', savedCustomization);
+      } else {
+        console.log('New template - customizations will be saved after template creation');
+      }
+      
+      // Close the editor after saving
+      onClose();
+    } catch (error) {
+      console.error('Failed to save template customizations:', error);
+      // You might want to show a toast notification here
+      alert('Failed to save customizations. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handlePreview = () => {
@@ -274,9 +364,10 @@ export default function SchedulingPageEditor({ isOpen, onClose, templateId, onSa
             </button>
             <button
               onClick={handleSave}
-              className="pixel-button bg-pixel-success text-white px-4 py-2 text-sm"
+              disabled={isSaving}
+              className="pixel-button bg-pixel-success text-white px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Save
+              {isSaving ? 'Saving...' : 'Save'}
             </button>
             <button
               onClick={onClose}

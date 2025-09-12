@@ -16,44 +16,44 @@ export default function GlobalError({
 
   return (
     <html>
-      <body>
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-purple-900 to-pink-900 p-4">
+      <body style={{background: 'var(--background)', color: 'var(--foreground)', fontFamily: 'var(--font-sans)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em'}}>
+        <div className="min-h-screen flex items-center justify-center p-4" style={{background: 'var(--background)'}}>
           <div className="max-w-md w-full text-center">
-            <div className="bg-black/20 backdrop-blur-lg rounded-2xl border border-gray-700 p-8 shadow-2xl">
+            <div style={{background: 'var(--card)', border: '4px solid var(--border)', borderRadius: '0px', boxShadow: 'var(--shadow-lg)', padding: '2rem'}}>
               <div className="mb-6">
-                <div className="w-16 h-16 bg-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white text-2xl">💥</span>
+                <div style={{width: '4rem', height: '4rem', background: 'var(--destructive)', border: '4px solid var(--border)', borderRadius: '0px', boxShadow: 'var(--shadow-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1rem', color: 'var(--destructive-foreground)'}}>
+                  <span style={{fontSize: '1.5rem'}}>💥</span>
                 </div>
-                <h1 className="text-2xl font-bold text-white mb-2">
-                  Application Error
+                <h1 style={{fontSize: '1.5rem', fontWeight: '800', color: 'var(--foreground)', marginBottom: '0.5rem'}}>
+                  APPLICATION ERROR
                 </h1>
-                <p className="text-gray-300">
-                  A critical error occurred. Please refresh the page to continue.
+                <p style={{color: 'var(--foreground)', opacity: '0.8'}}>
+                  A CRITICAL ERROR OCCURRED. PLEASE REFRESH THE PAGE TO CONTINUE.
                 </p>
               </div>
               
-              <div className="space-y-3">
+              <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
                 <button
                   onClick={reset}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition-all duration-200"
+                  style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'var(--destructive)', color: 'var(--destructive-foreground)', border: '4px solid var(--border)', padding: '1rem 2rem', fontFamily: 'var(--font-sans)', fontWeight: '800', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: 'var(--shadow-lg)', cursor: 'pointer', borderRadius: '0px'}}
                 >
-                  <RefreshCw className="w-4 h-4" />
-                  Reset Application
+                  <RefreshCw style={{width: '1rem', height: '1rem'}} />
+                  RESET APPLICATION
                 </button>
                 
                 <button 
                   onClick={() => window.location.href = '/'}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-xl font-medium transition-all duration-200"
+                  style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', background: 'var(--card)', color: 'var(--foreground)', border: '4px solid var(--border)', padding: '1rem 2rem', fontFamily: 'var(--font-sans)', fontWeight: '700', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: 'var(--shadow-lg)', cursor: 'pointer', borderRadius: '0px'}}
                 >
-                  <Home className="w-4 h-4" />
-                  Go to Home
+                  <Home style={{width: '1rem', height: '1rem'}} />
+                  GO TO HOME
                 </button>
               </div>
               
               {error.message && (
-                <div className="mt-6 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                  <p className="text-red-300 text-sm font-mono">
-                    {error.message}
+                <div style={{marginTop: '1.5rem', padding: '1rem', background: 'var(--destructive)', border: '4px solid var(--border)', borderRadius: '0px'}}>
+                  <p style={{color: 'var(--destructive-foreground)', fontSize: '0.875rem', fontFamily: 'monospace'}}>
+                    {error.message.toUpperCase()}
                   </p>
                 </div>
               )}

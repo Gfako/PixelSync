@@ -4,6 +4,11 @@ import LinkedInProvider from 'next-auth/providers/linkedin'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { validateUser, createUser } from './user-store'
 
+// Validate required environment variables
+if (!process.env.NEXTAUTH_SECRET) {
+  throw new Error('NEXTAUTH_SECRET environment variable is required')
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -24,7 +29,7 @@ export const authOptions: NextAuthOptions = {
           try {
             // Create new user
             const name = credentials.email.split('@')[0]
-            const newUser = createUser(credentials.email, credentials.password, name)
+            const newUser = await createUser(credentials.email, credentials.password, name)
             
             return {
               id: newUser.id,
@@ -37,7 +42,7 @@ export const authOptions: NextAuthOptions = {
           }
         } else {
           // Sign in existing user
-          const user = validateUser(credentials.email, credentials.password)
+          const user = await validateUser(credentials.email, credentials.password)
           
           if (!user) {
             throw new Error('Invalid email or password')
@@ -61,7 +66,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET || 'dummy-linkedin-secret',
     })
   ],
-  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-key-change-in-production',
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt'
   },
@@ -83,5 +88,5 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth/signin',
     error: '/auth/error'
   },
-  debug: true // Enable debug mode to see what's happening
+  debug: process.env.NODE_ENV === 'development' // Only enable debug in development
 }
