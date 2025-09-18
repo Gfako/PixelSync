@@ -113,13 +113,47 @@ export class GoogleCalendarService {
   async deleteEvent(eventId: string) {
     try {
       const calendar = google.calendar({ version: 'v3', auth: this.oauth2Client })
-      
+
       await calendar.events.delete({
         calendarId: 'primary',
         eventId
       })
     } catch (error) {
       console.error('Error deleting Google Calendar event:', error)
+      throw error
+    }
+  }
+
+  async getEvents(startTime: Date, endTime: Date) {
+    try {
+      const calendar = google.calendar({ version: 'v3', auth: this.oauth2Client })
+
+      const response = await calendar.events.list({
+        calendarId: 'primary',
+        timeMin: startTime.toISOString(),
+        timeMax: endTime.toISOString(),
+        singleEvents: true,
+        orderBy: 'startTime',
+        maxResults: 250
+      })
+
+      const events = response.data.items || []
+      return events.map((event: any) => ({
+        id: event.id,
+        title: event.summary || 'No title',
+        description: event.description || '',
+        start_time: event.start?.dateTime || event.start?.date,
+        end_time: event.end?.dateTime || event.end?.date,
+        location: event.location || '',
+        attendees: event.attendees?.map((a: any) => a.email) || [],
+        status: event.status,
+        htmlLink: event.htmlLink,
+        created: event.created,
+        updated: event.updated,
+        source: 'google_calendar'
+      }))
+    } catch (error) {
+      console.error('Error fetching Google Calendar events:', error)
       throw error
     }
   }
@@ -241,6 +275,36 @@ export class OutlookCalendarService {
       throw error
     }
   }
+
+  async getEvents(startTime: Date, endTime: Date) {
+    try {
+      const response = await this.client
+        .api('/me/events')
+        .filter(`start/dateTime ge '${startTime.toISOString()}' and end/dateTime le '${endTime.toISOString()}'`)
+        .orderBy('start/dateTime')
+        .top(250)
+        .get()
+
+      const events = response.value || []
+      return events.map((event: any) => ({
+        id: event.id,
+        title: event.subject || 'No title',
+        description: event.body?.content || '',
+        start_time: event.start?.dateTime,
+        end_time: event.end?.dateTime,
+        location: event.location?.displayName || '',
+        attendees: event.attendees?.map((a: any) => a.emailAddress.address) || [],
+        status: event.showAs,
+        webLink: event.webLink,
+        created: event.createdDateTime,
+        updated: event.lastModifiedDateTime,
+        source: 'outlook_calendar'
+      }))
+    } catch (error) {
+      console.error('Error fetching Outlook Calendar events:', error)
+      throw error
+    }
+  }
 }
 
 // Calendar Service Factory
@@ -344,6 +408,44 @@ export class CalendarService {
     return merged
   }
 
+  static async getAllCalendarEvents(
+    userId: string,
+    startTime: Date,
+    endTime: Date
+  ): Promise<any[]> {
+    const integrations = await getCalendarIntegrations(userId)
+    const allEvents: any[] = []
+
+    for (const integration of integrations) {
+      try {
+        if (integration.provider === 'google') {
+          const googleService = new GoogleCalendarService(
+            integration.access_token,
+            integration.refresh_token
+          )
+          const events = await googleService.getEvents(startTime, endTime)
+          allEvents.push(...events.map(event => ({
+            ...event,
+            provider: 'google'
+          })))
+        } else if (integration.provider === 'outlook') {
+          const outlookService = new OutlookCalendarService(integration.access_token)
+          const events = await outlookService.getEvents(startTime, endTime)
+          allEvents.push(...events.map(event => ({
+            ...event,
+            provider: 'outlook'
+          })))
+        }
+      } catch (error) {
+        console.error(`Error fetching events from ${integration.provider}:`, error)
+        // Continue with other integrations
+      }
+    }
+
+    // Sort by start time
+    return allEvents.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+  }
+
   static findAvailableSlots(
     busyTimes: { start: Date; end: Date }[],
     requestedStart: Date,
@@ -354,7 +456,7 @@ export class CalendarService {
     const durationMs = duration * 60 * 1000
 
     let currentTime = new Date(requestedStart)
-    
+
     for (const busySlot of busyTimes) {
       // If there's a gap between currentTime and the next busy slot
       if (currentTime < busySlot.start && (busySlot.start.getTime() - currentTime.getTime()) >= durationMs) {
